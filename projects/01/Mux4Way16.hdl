@@ -17,4 +17,11 @@ CHIP Mux4Way16 {
 
     PARTS:
     // Put your code here:
+    // we can get the first result from sel[0] to decide whether choose a or b and c or d
+    Mux16(a=a, b=b, sel=sel[0], out=aorb);
+    Mux16(a=c, b=d, sel=sel[0], out=cord);
+
+    // then we use sel[1] to decide whether aorb or cord
+    Mux16(a=aorb, b=cord, sel=sel[1], out=out);
+
 }
