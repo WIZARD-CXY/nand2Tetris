@@ -11,6 +11,14 @@
 // Put your code here.
 // first put the starting address of the screen in R0
 
+@8192
+D=A
+@SCREEN
+D=D+A
+
+// set the total words to 32x256+SCREEN
+@totalwords
+M=D
 
 (START)
 // store the screen start address in R0
@@ -60,15 +68,44 @@ M=D
 @R0
 D=M+1
 
-@KBD
-D=A-D
+//totalwords - current addr 
+@totalwords
+D=M-D
+
+//already fill the whole screen no need to forward current write addr
+@START
+D;JLT
 
 @R0
 M=M+1
 
-//if D>0 still need to fill 
-@UPDATE
+@KBD
+D=M
+//if D>0 still need to fill
+@PRESSKEY
 D;JGT
+
+@NOTPRESSKEY
+0;JMP
+
+// press key situation
+(PRESSKEY)
+@R1
+D=M
+
+@START
+D;JEQ
+
+@UPDATE
+0;JMP
+
+//not press key situation
+(NOTPRESSKEY)
+@R1
+D=M
+
+@UPDATE
+D;JEQ
 
 @START
 0;JMP
